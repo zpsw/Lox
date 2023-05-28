@@ -6,10 +6,12 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
+import java.util.List;
 
 public class Lox {
-    private static boolean hadError = false;
     private static final Interpreter interpreter = new Interpreter();
+    private static boolean hadError = false;
     private static boolean hadRuntimeError = false;
 
     public static void main(String[] args) throws IOException {
@@ -53,15 +55,12 @@ public class Lox {
         java.util.List<Token> tokens = scanner.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         if (hadError) {
             return;
         }
-
-        System.out.println(new AstPrinter().print(expression));
-
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     static void error(int line, String message) {
@@ -87,4 +86,5 @@ public class Lox {
                 "[line " + line + "] Error" + where + ": " + message);
         hadError = true;
     }
+
 }
