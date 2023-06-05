@@ -8,7 +8,14 @@ varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 statement      → exprStmt
                | ifStmt
                | printStmt
+               | whileStmt
                | block ;
+
+forStmt       → "for" "(" ( varDecl | exprStmt | ";" )
+               expression? ";"
+               expression? ")" statement ;
+
+whileStmt      → "while" "(" expression ")" statement ;
 
 ifStmt         → "if" "(" expression ")" statement
                ( "else" statement )? ;
@@ -38,6 +45,8 @@ factor         → unary ( ( "/" | "*" ) unary )* ;
 
 unary          → ( "!" | "-" ) unary
                | primary ;
+
+call           → primary ( "(" arguments? ")" )* ;
 
 primary        → "true" | "false" | "nil"
                | NUMBER | STRING
