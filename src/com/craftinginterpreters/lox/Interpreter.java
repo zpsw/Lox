@@ -212,7 +212,18 @@ class Interpreter implements Expr.Visitor<Object>,
 
     @Override
     public Object visitSuperExpr(Expr.Super expr) {
-       return null;
+        int distance = locals.get(expr);
+        LoxClass superClass = (LoxClass) environment.getAt(
+                distance, "super");
+        LoxInstance object = (LoxInstance) environment.getAt(
+                distance - 1, "this");
+
+        LoxFunction method = superClass.findMethod(expr.method.lexeme);
+        if (method == null) {
+            throw new RuntimeError(expr.method,
+                    "Undefined property '" + expr.method.lexeme + "'.");
+        }
+        return method.bind(object);
     }
 
     @Override
