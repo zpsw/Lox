@@ -31,9 +31,24 @@ public class Environment {
                 "Undefined variable '" + name.lexeme + "'.");
     }
 
+    void assignAt(Integer distance, Token name, Object value) {
+        ancestor(distance).values.put(name.lexeme, value);
+    }
 
     void define(String name, Object value) {
         values.put(name, value);
+    }
+
+    Object getAt(int distance, String lexeme) {
+        return ancestor(distance).values.get(lexeme);
+    }
+
+    private Environment ancestor(int distance) {
+        Environment environment = this;
+        for (int i = 0; i < distance; i++) {
+            environment = environment.enclosing;
+        }
+        return environment;
     }
 
     void assign(Token name, Object value) {
